@@ -1,5 +1,9 @@
-import Image from "next/image";
+import EventList from "@/components/EventList";
 
 export default function Home() {
-  return <div>hi</div>;
+  return (
+    <div>
+      <EventList />
+    </div>
+  );
 }
