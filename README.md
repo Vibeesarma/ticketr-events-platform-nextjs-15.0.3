@@ -74,6 +74,6 @@ export const config = {
 - copy `sampleData.json` to `convex/sampleData.json` (this for seed data)
 - run the convert import data command
 
-- To connect convex with Clerk follow the [guide](https://docs.convex.dev/auth/clerk)
+- If you want to connect convex with Clerk follow the [guide](https://docs.convex.dev/auth/clerk)
 
 > Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
