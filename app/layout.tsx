@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/CovexClientProvider";
+import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header";
 import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
             <Header />
             <SyncUserWithConvex />
             {children}
+            <Toaster />
           </ClerkProvider>
         </ConvexClientProvider>
       </body>

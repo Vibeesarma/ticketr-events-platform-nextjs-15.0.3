@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { WAITING_LIST_STATUS } from "./constants";
 
 export const getQueuePosition = query({
@@ -38,6 +38,28 @@ export const getQueuePosition = query({
       ...entry,
       position: peoplesAhead + 1,
     };
+  },
+});
+
+// Internal mutation to expire a single offer and process the queue for next person
+export const expireOffer = internalMutation({
+  args: {
+    waitingListId: v.id("waitingList"),
+    eventId: v.id("events"),
+  },
+  handler: async (ctx, { waitingListId, eventId }) => {
+    const offer = await ctx.db.get(waitingListId);
+
+    // Check if offer is valid and not already expired
+    if (!offer || offer.status !== WAITING_LIST_STATUS.OFFERED) return;
+
+    // Mark the entry as expired
+    await ctx.db.patch(waitingListId, {
+      status: WAITING_LIST_STATUS.EXPIRED,
+    });
+
+    // TODO: Process queue to offer ticket to next person
+    // await processQueue(ctx, { eventId });
   },
 });
 
