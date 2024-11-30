@@ -73,10 +73,9 @@ export const config = {
 - just follow the step for add to [next.js project](https://docs.convex.dev/quickstart/nextjs).
 - copy `sampleData.json` to `convex/sampleData.json` (this for seed data)
 - run the convert import data command
+- the storage of convex give a new url for upload files in every time this is a more secure way for expose backend data.
 
 - If you want to connect convex with Clerk follow the [guide](https://docs.convex.dev/auth/clerk)
-
-> Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
 
 ## Stripe Connect
 
@@ -281,3 +280,7 @@ export async function createStripeCheckoutSession({
   return { sessionId: session.id, sessionUrl: session.url };
 }
 ```
+
+- Stripe connect [docs](https://docs.stripe.com/connect/onboarding/quickstart?connect-onboarding-surface=hosted&connect-dashboard-type=full&connect-economic-model=buy-rate&connect-loss-liability-owner=stripe&connect-charge-type=direct&client=next#init-stripe)
+
+> Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
