@@ -45,7 +45,9 @@ export const getEventAvailability = query({
     const now = Date.now();
     const activeOffers = await ctx.db
       .query("waitingList")
-      .withIndex("by_event_status", (q) => q.eq("eventId", eventId))
+      .withIndex("by_event_status", (q) =>
+        q.eq("eventId", eventId).eq("status", WAITING_LIST_STATUS.OFFERED)
+      )
       .collect()
       .then(
         (entries) => entries.filter((e) => e.offerExpiresAt ?? 0 > now).length
@@ -126,12 +128,13 @@ export const joinWaitingList = mutation({
     // }
 
     // First check if user is already in the waiting list
+    // Active means any status except EXPIRED
     const existingEntry = await ctx.db
       .query("waitingList")
       .withIndex("by_user_event", (q) =>
         q.eq("userId", userId).eq("eventId", eventId)
       )
-      .filter((q) => q.eq(q.field("status"), WAITING_LIST_STATUS.EXPIRED))
+      .filter((q) => q.neq(q.field("status"), WAITING_LIST_STATUS.EXPIRED))
       .first();
 
     // Don't add user if they're already in the waiting list
