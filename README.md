@@ -351,4 +351,9 @@ export async function POST(req: Request) {
 
 - Run this webhook in local use the doc in webhook add section in stripe.
 
+## React Qr Code
+
+- Create a QR code using the [react-qr-code](https://www.npmjs.com/package/react-qr-code) package.
+- install the npm `npm install react-qr-code` in your project.
+
 > Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
