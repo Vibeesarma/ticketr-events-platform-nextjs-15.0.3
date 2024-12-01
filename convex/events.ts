@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { DURATIONS, TICKET_STATUS, WAITING_LIST_STATUS } from "./constants";
 import { internal } from "./_generated/api";
+import { processQueue } from "./waitingList";
 
 export const updateEvent = mutation({
   args: {
@@ -246,5 +247,87 @@ export const joinWaitingList = mutation({
         ? `Ticket offered - you have ${DURATIONS.TICKET_OFFER / (1000 * 60)} minutes to purchase`
         : "Added to waiting list - you will be notified when a ticket is available",
     };
+  },
+});
+
+// Purchase ticket
+export const purchaseTicket = mutation({
+  args: {
+    eventId: v.id("events"),
+    userId: v.string(),
+    waitingListId: v.id("waitingList"),
+    paymentInfo: v.object({
+      paymentIntentId: v.string(),
+      amount: v.number(),
+    }),
+  },
+  handler: async (ctx, { eventId, userId, waitingListId, paymentInfo }) => {
+    console.log("Starting purchaseTicket handler", {
+      eventId,
+      userId,
+      waitingListId,
+    });
+
+    // Verify waiting list entry exists and is valid
+    const waitingListEntry = await ctx.db.get(waitingListId);
+    console.log("Waiting list entry:", waitingListEntry);
+
+    if (waitingListEntry?.status !== WAITING_LIST_STATUS.OFFERED) {
+      console.error("Ticket not offered", { status: waitingListEntry?.status });
+
+      throw new Error(
+        "Invalid waiting list status - ticket offer may have expired"
+      );
+    }
+
+    if (waitingListEntry.userId !== userId) {
+      console.error("User ID mismatch", {
+        userId,
+        waitingListEntryUserId: waitingListEntry.userId,
+      });
+
+      throw new Error("Waiting list entry does not belong to user");
+    }
+
+    // Verify event exists and is active
+    const event = await ctx.db.get(eventId);
+    console.log("🚀 ~ file: events.ts:294 ~ handler: ~ event:", event);
+
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    if (event.is_cancelled) {
+      console.log("attempting to purchase a cancelled event", { eventId });
+
+      throw new Error("Event is no longer active");
+    }
+
+    try {
+      console.log("Creating ticket with payment info", paymentInfo);
+      // Create ticket with payment info
+      await ctx.db.insert("tickets", {
+        eventId,
+        userId,
+        purchasedAt: Date.now(),
+        status: TICKET_STATUS.VALID,
+        paymentIntentId: paymentInfo.paymentIntentId,
+        amount: paymentInfo.amount,
+      });
+
+      console.log("Updating waiting list status to purchased");
+      await ctx.db.patch(waitingListId, {
+        status: WAITING_LIST_STATUS.PURCHASED,
+      });
+
+      console.log("Processing queue for next person");
+      // Process queue for next person
+      await processQueue(ctx, { eventId });
+
+      console.log("Purchase ticket completed successfully");
+    } catch (error) {
+      console.error("Failed to complete ticket purchase:", error);
+      throw new Error(`Failed to complete ticket purchase: ${error}`);
+    }
   },
 });
