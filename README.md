@@ -365,4 +365,5 @@ export async function POST(req: Request) {
 - install the npm `npm install react-qr-code` in your project.
 
 > Project [Github Link](https://github.com/sonnysangha/ticket-marketplace-saas-nextjs15-convex-clerk-stripe-connect)
+
 > Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
