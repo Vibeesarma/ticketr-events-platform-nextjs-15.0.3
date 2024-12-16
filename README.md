@@ -71,6 +71,7 @@ export const config = {
 
 - [Convex](https://www.convex.dev/) is the sync platform that replaces your backend and client state management.
 - just follow the step for add to [next.js project](https://docs.convex.dev/quickstart/nextjs).
+- run the project `npx convex dev`.
 - copy `sampleData.json` to `convex/sampleData.json` (this for seed data)
 - run the convert import data command
 - the storage of convex give a new url for upload files in every time this is a more secure way for expose backend data.
@@ -350,6 +351,12 @@ export async function POST(req: Request) {
 ```
 
 - Run this webhook in local use the doc in webhook add section in stripe.
+- Install stripe cli
+- run `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
+- then run stripe cli `stripe login`. you redirect to stripe dashboard.
+- after verification get the webhook secret key for local in console and paste it in the `STRIPE_WEBHOOK_SECRET` variable. 
+- for production run get the webhook secret in stripe dashboard and paste it in the `STRIPE_WEBHOOK_SECRET` variable.
+
 
 ## React Qr Code
 
