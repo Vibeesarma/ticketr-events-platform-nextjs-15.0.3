@@ -363,4 +363,5 @@ export async function POST(req: Request) {
 - Create a QR code using the [react-qr-code](https://www.npmjs.com/package/react-qr-code) package.
 - install the npm `npm install react-qr-code` in your project.
 
+> Project [Github Link](https://github.com/sonnysangha/ticket-marketplace-saas-nextjs15-convex-clerk-stripe-connect)
 > Thanks for [Sonny Sangha](https://www.youtube.com/@SonnySangha)
