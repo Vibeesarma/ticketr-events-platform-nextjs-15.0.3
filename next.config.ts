@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "hip-lemur-740.convex.cloud",
       },
+      {
+        protocol: "https",
+        hostname: "tame-hamster-542.convex.cloud",
+      },
     ],
   },
 };
